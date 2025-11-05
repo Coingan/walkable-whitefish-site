@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walkable Whitefish - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '🏔️';
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            background: #0a5147;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: #0d6b5e;
+        }
+
+        .nav-links a.book-now {
+            background: #c49b5e;
+        }
+
+        .nav-links a.book-now:hover {
+            background: #d4a865;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(rgba(10, 81, 71, 0.3), rgba(10, 81, 71, 0.4)),
+                url('images/hero-background.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            background: #c8e6d5;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .gallery-section .take-look-btn {
+            background: #0a5147;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: background 0.3s;
+        }
+
+        .gallery-section .take-look-btn:hover {
+            background: #0d6b5e;
+        }
+
+        .gallery-section h2 {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .gallery-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 1rem 0;
+            scrollbar-width: none;
+        }
+
+        .gallery-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-item {
+            flex: 0 0 calc(33.333% - 1rem);
+            min-width: 300px;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Image Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.1);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 81, 71, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(10, 81, 71, 1);
+        }
+
+        .carousel-btn.prev {
+            left: 10px;
+        }
+
+        .carousel-btn.next {
+            right: 10px;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: #e8f4f0;
+            padding: 4rem 2rem;
+        }
+
+        .info-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-section h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .info-section .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #555;
+        }
+
+        .info-section h3 {
+            text-align: center;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .info-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            line-height: 1.8;
+            color: #333;
+            text-align: center;
+        }
+
+        .info-item strong {
+            color: #0a5147;
+        }
+
+        /* Stats Grid */
+        .stats-section {
+            background: #e8f4f0;
+            padding: 2rem 2rem 4rem 2rem;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #0a5147;
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: #1a1a1a;
+            padding: 4rem 2rem;
+            color: white;
+            position: relative;
+            min-height: 500px;
+        }
+
+        .testimonials-section h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .testimonial-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .testimonial.active {
+            display: block;
+        }
+
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #0a5147;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-meta {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: #e8f4f0;
+            padding: 4rem 2rem;
+        }
+
+        .video-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f0f0f0;
+            padding: 4rem 2rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .footer p {
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .contact-item {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .contact-item strong {
+            color: #0a5147;
+        }
+
+        .footer-right {
+            text-align: right;
+            background-image: url('images/FrontHouseOutside.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 3rem;
+            border-radius: 10px;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .footer-right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, .01);
+            border-radius: 10px;
+            z-index: 0;
+        }
+
+        .footer-right > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-now-footer {
+            background: #c49b5e;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: background 0.3s;
+        }
+
+        .book-now-footer:hover {
+            background: #d4a865;
+        }
+
+        .social-media {
+            margin-top: 2rem;
+        }
+
+        .social-media h4 {
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-icon:hover {
+            background: #0a5147;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -200px;
+                flex-direction: column;
+                background: rgba(26, 26, 26, 0.75);
+                width: 200px;
+                padding: 1rem 0.5rem 1rem 0.5rem;
+                transition: right 0.3s;
+                border-radius: 0 0 0 10px;
+                gap: 0.5rem;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                padding: 0.7rem 1rem;
+                width: 100%;
+                text-align: center;
+                display: block;
+                box-sizing: border-box;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+
+            .gallery-item {
+                flex: 0 0 90%;
+                min-width: 280px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-right {
+                text-align: left;
+                background-image: none;
+                padding: 0;
+                min-height: auto;
+            }
+
+            .footer-right::before {
+                display: none;
+            }
+
+            .social-icons {
+                justify-content: flex-start;
+            }
+
+            .gallery-section h2,
+            .info-section h2,
+            .testimonials-section h2,
+            .footer h2 {
+                font-size: 2rem;
+            }
+
+            .carousel-btn {
+                background: rgba(10, 81, 71, 0.4);
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+
+            .carousel-btn.prev {
+                left: 3.5px;
+            }
+
+            .carousel-btn.next {
+                right: 3.5px;
+            }
+
+            .carousel-btn:hover {
+                background: rgba(10, 81, 71, 0.6);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card .number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Walkable Whitefish</div>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#discover">Discover</a></li>
+            <li><a href="#contact" class="book-now">Book Now</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Experience<br>Walkable<br>Whitefish</h1>
+            <p>Your perfect getaway, book your stay today!</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <h2>Our Beautiful Home</h2>
+        <div class="gallery-container">
+            <button class="carousel-btn prev" onclick="scrollGallery(-1)">❮</button>
+            <div class="gallery-carousel" id="galleryCarousel">
+                <div class="gallery-item">
+                    <img src="images/gallery/kitchenCollageDark.png" alt="Kitchen">
+                    <div class="gallery-caption">Kitchen and Patio</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/LivingRoomCollageDark.png" alt="Living Room">
+                    <div class="gallery-caption">Living Room/Dining</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/BedroomsCollageDark.png" alt="Bedrooms">
+                    <div class="gallery-caption">Bedrooms/Upstairs</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/MasterBalconyCollageDark.png" alt="Master + Balcony">
+                    <div class="gallery-caption">Master + Balcony</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/kitchen.jpg" alt="Kitchen">
+                    <div class="gallery-caption">Kitchen</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/kitchen2.jpg" alt="Kitchen 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/kitchen3.jpg" alt="Kitchen 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/kitchen4.jpg" alt="Kitchen 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/LaundryRoomEntryWay.jpg" alt="Laundry Room/Entry Way">
+                    <div class="gallery-caption">Laundry Room/Entry Way</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/LivingRoomDining.jpg" alt="Living Room/Dining">
+                    <div class="gallery-caption">Living Room/Dining</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/LivingRoomCouch3.jpg" alt="Living Room Dining">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/DiningTable.jpg" alt="Dining Area">
+                    <div class="gallery-caption">Dining Area</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/DiningTable2.jpg" alt="Dining Table">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/FrontPatio.jpg" alt="Front Patio">
+                    <div class="gallery-caption">Front Patio</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Outdoordeck.jpg" alt="Outdoor Deck">
+                    <div class="gallery-caption">Back Patio</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/MasterBedroom.jpg" alt="Master Bedroom">
+                    <div class="gallery-caption">Master Bedroom</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/MasterBedroom2.jpg" alt="Master Bedroom 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Bedroom1.jpg" alt="Bedroom 1">
+                    <div class="gallery-caption">Bedroom 1</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Bedroom2.jpg" alt="Bedroom 2">
+                    <div class="gallery-caption">Bedroom 2</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/BunkRoom.jpg" alt="Bunk Room">
+                    <div class="gallery-caption">Bunk Room</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/BunkRoom2.jpg" alt="Bunk Room">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Hallway.jpg" alt="Hallway">
+                    <div class="gallery-caption">Downstairs Hallway</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Balcony1.jpg" alt="Balcony 1">
+                    <div class="gallery-caption">Balcony</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Balcony2.jpg" alt="Balcony 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/Balcony3.jpg" alt="Balcony 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/TopStairs.jpg" alt="Top Stairs">
+                    <div class="gallery-caption">Top of Stairs</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/FrontHouseOutside.jpg" alt="Front House Outside">
+                    <div class="gallery-caption">Front of House</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/AerialBackNoText.jpg" alt="Aerial Shots">
+                    <div class="gallery-caption">Aerial Shots</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/AerialSideView.jpg" alt="Aerial Side View">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/AerialSideView2NoText.jpg" alt="Aerial Side View 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/AerialView.jpg" alt="Aerial View">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/AerialView2.jpg" alt="Aerial View 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/gallery/image34.jpg" alt="Photo 34">
+                </div>
+            </div>
+            <button class="carousel-btn next" onclick="scrollGallery(1)">❯</button>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section" id="discover">
+        <div class="info-container">
+            <h2>Discover the Perfect Retreat</h2>
+            <p class="subtitle">This stunning home offers the ultimate Montana getaway for up to 10 guests.</p>
+            <h3>Here's what to expect:</h3>
+
+            <div class="info-details">
+                <p class="info-item">
+                    <strong>Prime Location:</strong> Only 0.5 miles from downtown whitefish, 0.5 miles to city beach, 1
+                    mile from Whitefish Lake Golf Club and a 15-minute drive to Whitefish Mountain Resort.
+                    Alternatively, walk 0.4 miles to the free S.N.O.W. Bus stop for easy access to mountain activities
+                    year-round.
+                </p>
+
+                <p class="info-item">
+                    <strong>Spacious Living:</strong> Enjoy a spacious open floor plan with a fully equipped kitchen,
+                    living area, dining area, four bedrooms, and three bathrooms. The kitchen is recently updated and
+                    features ample seating at the large island and dining table, both offering breathtaking mountain
+                    views.
+                </p>
+
+                <p class="info-item">
+                    <strong>Comfortable Amenities:</strong> The living area boasts a large sectional sofa and a 55" TV
+                    with Apple TV. A mudroom with washer and dryer, and two bedrooms on the main level, each with double
+                    beds and a separate full bathroom.
+                </p>
+
+                <p class="info-item">
+                    <strong>Master Suites:</strong> The upper level features two expansive master bedrooms. The main
+                    suite includes a king-size bed, giant walk-in closet, and an en-suite bathroom. Double French doors
+                    lead to a massive deck with cozy couches and stunning views of Whitefish Mountain. The second master
+                    has a twin bed, twin bunk beds with a trundle, an en-suite bathroom, and a large walk-in closet.
+                </p>
+
+                <p class="info-item">
+                    <strong>Outdoor Living:</strong> Three decks provide ample space to enjoy the mountain views, with
+                    outdoor dining tables and comfortable seating areas.
+                </p>
+
+                <p class="info-item">
+                    <strong>Private Yard:</strong> A fenced-in backyard in a quiet cul-de-sac ensures a peaceful and
+                    private retreat.
+                </p>
+
+                <p class="info-item">
+                    <strong>Convenient Access:</strong> Walkable to most amenities, with the airport just a 20-minute
+                    drive away. Two off-street parking spaces and additional street parking options are available.
+                </p>
+
+                <p class="info-item">
+                    This home is perfect for families, groups, or anyone seeking a luxurious and convenient base for
+                    their Whitefish adventure. Give us a call or email to book now and experience the best of Montana's
+                    outdoor paradise.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number">4</div>
+                <div class="label">Bedrooms</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">3</div>
+                <div class="label">Bathrooms</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">10</div>
+                <div class="label">Guests can be accommodated</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">0.5</div>
+                <div class="label">Miles to town center and city beach</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">0.4</div>
+                <div class="label">Mile walk to free S.N.O.W. bus stop</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">15</div>
+                <div class="label">Minute drive to Whitefish Mountain Resort</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">1</div>
+                <div class="label">Mile to Whitefish Lake Golf Club</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">20</div>
+                <div class="label">Minute drive from airport</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <h2>Our guests say...</h2>
+        <div class="testimonial-container">
+            <button class="carousel-btn prev" onclick="changeTestimonial(-1)">❮</button>
+            <div class="testimonial active" data-index="0">
+                <div class="testimonial-avatar">👤</div>
+                <p class="testimonial-text">
+                    Matthew's home was as described. It is their family home so it is well appointed and a home from
+                    home. It was nice to have a a nice kitchen to cook a few food meals in. Our hosts were professional,
+                    friendly and proactive. They kindly let us use a private garage when we had some car issues and when
+                    the front door lock froze they sorted it out right away.
+                </p>
+                <p class="testimonial-text">
+                    We had a fantastic family ski holiday with a mix of home cooked meals and excellent dining out in
+                    downtown Whitefish. I would recommend Matthew's place to any family who wants a home from home.
+                </p>
+                <div class="testimonial-author">Charles</div>
+                <div class="testimonial-meta">4 Years on AirBnB</div>
+            </div>
+            <div class="testimonial" data-index="1">
+                <div class="testimonial-avatar">👤</div>
+                <p class="testimonial-text">
+                    Amazing location and beautiful home! Perfect for our family getaway. The house had everything we
+                    needed and more. The views were spectacular and we loved being so close to downtown Whitefish.
+                </p>
+                <div class="testimonial-author">Sarah M.</div>
+                <div class="testimonial-meta">3 Years on AirBnB</div>
+            </div>
+            <div class="testimonial" data-index="2">
+                <div class="testimonial-avatar">👤</div>
+                <p class="testimonial-text">
+                    We had an incredible stay! The home is spacious, clean, and perfectly located. Easy walk to
+                    restaurants and shops. Would definitely book again!
+                </p>
+                <div class="testimonial-author">John D.</div>
+                <div class="testimonial-meta">5 Years on AirBnB</div>
+            </div>
+            <button class="carousel-btn next" onclick="changeTestimonial(1)">❯</button>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <div class="video-container">
+            <!-- Replace with your actual YouTube video ID -->
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/nDhYzC9Vhj8?si=H8-jO3xZqWyaG5As" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-left">
+                <h2>Experience the Charm<br>of Whitefish</h2>
+                <p>Book your perfect getaway at our beautiful house in Whitefish, Montana.</p>
+
+                <h3>Contact Us</h3>
+                <div class="contact-info">
+                    <div class="contact-item"><strong>Calida</strong> - (218)-821-8885</div>
+                    <div class="contact-item"><strong>Matt</strong> - (406)-890-9218</div>
+                    <div class="contact-item">walkablewhitefish@gmail.com</div>
+                    <div class="contact-item">🏔️ <strong>WalkableWhitefish</strong></div>
+                </div>
+
+                <a href="mailto:walkablewhitefish@gmail.com?subject=Booking%20Inquiry%20for%20Walkable%20Whitefish" class="book-now-footer" style="display: inline-block; text-decoration: none; margin-top: 2rem;">📧 Book Now</a>
+            </div>
+
+            <div class="footer-right">
+                <a href="mailto:walkablewhitefish@gmail.com?subject=Booking%20Inquiry%20for%20Walkable%20Whitefish" class="book-now-footer" style="display: inline-block; text-decoration: none;">📧 Book Now</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Image Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Gallery carousel
+        function scrollGallery(direction) {
+            const carousel = document.getElementById('galleryCarousel');
+            const scrollAmount = carousel.offsetWidth * 0.8;
+            carousel.scrollLeft += direction * scrollAmount;
+        }
+
+        // Testimonial carousel
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial');
+
+        function changeTestimonial(direction) {
+            testimonials[currentTestimonial].classList.remove('active');
+            currentTestimonial = (currentTestimonial + direction + testimonials.length) % testimonials.length;
+            testimonials[currentTestimonial].classList.add('active');
+        }
+
+        // Auto-rotate testimonials every 8 seconds
+        setInterval(() => {
+            changeTestimonial(1);
+        }, 8000);
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+        });
+
+        // Lightbox functionality
+        function openLightbox(imgSrc, caption) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+
+            lightboxImg.src = imgSrc;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Make gallery images clickable
+        document.addEventListener('DOMContentLoaded', function () {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                const img = item.querySelector('img');
+                const caption = item.querySelector('.gallery-caption');
+
+                img.style.cursor = 'pointer';
+
+                img.addEventListener('click', function () {
+                    const captionText = caption ? caption.textContent : img.alt;
+                    openLightbox(img.src, captionText);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
