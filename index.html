@@ -996,7 +996,7 @@
         // Gallery carousel
         function scrollGallery(direction) {
             const carousel = document.getElementById('galleryCarousel');
-            const scrollAmount = carousel.offsetWidth * 0.8;
+            const scrollAmount = carousel.offsetWidth * 1;
             carousel.scrollLeft += direction * scrollAmount;
         }
 
@@ -1010,10 +1010,10 @@
             testimonials[currentTestimonial].classList.add('active');
         }
 
-        // Auto-rotate testimonials every 8 seconds
+        /* Auto-rotate testimonials every 60 seconds.  Commented out.
         setInterval(() => {
             changeTestimonial(1);
-        }, 8000);
+        }, 60000); */
 
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
